@@ -1,0 +1,34 @@
+---
+- name: Install ufw package
+  ansible.builtin.package:
+    name: ufw
+    state: present
+
+- name: Allow SSH (port 22)
+  ansible.builtin.ufw:
+    rule: allow
+    port: '22'
+    proto: tcp
+
+- name: Allow SSH (port 7652)
+  ansible.builtin.ufw:
+    rule: allow
+    port: '7652'
+    proto: tcp
+
+- name: Allow HTTP (port 80)
+  ansible.builtin.ufw:
+    rule: allow
+    port: '80'
+    proto: tcp
+
+- name: Allow HTTPS (port 443)
+  ansible.builtin.ufw:
+    rule: allow
+    port: '443'
+    proto: tcp
+
+- name: Enable UFW with default settings
+  ansible.builtin.ufw:
+    state: enabled
+    policy: deny  # Bloque toutes les connexions entrantes par défaut sauf celles explicitement autorisées

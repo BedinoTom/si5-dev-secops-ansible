@@ -1,0 +1,20 @@
+---
+- name: Setup Prod Env
+  hosts: all
+  become: yes
+  vars:
+    ssh_public_key_path: "{{ lookup('file', './ressources/key.pub') }}"
+    target_user: "{{ ansible_user }}"
+    ssh_jail_config:
+      enabled: "true"
+      port: "ssh"
+      filter: "sshd"
+      logpath: "/var/log/auth.log"  # Chemin vers le fichier de log (peut varier selon la distribution)
+      maxretry: "5"
+      bantime: "3600"  # Durée du bannissement en secondes (1 heure)
+  roles:
+    - sshd
+    - add-key
+    - fail2ban
+    - firewall
+    - install-docker

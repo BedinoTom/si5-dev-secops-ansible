@@ -1,0 +1,29 @@
+---
+- name: Install fail2ban package
+  ansible.builtin.package:
+    name: fail2ban
+    state: present
+
+- name: Ensure fail2ban service is enabled and running
+  ansible.builtin.service:
+    name: fail2ban
+    state: started
+    enabled: yes
+
+- name: Configure SSH jail in fail2ban
+  ansible.builtin.blockinfile:
+    path: /etc/fail2ban/jail.local
+    create: yes
+    block: |
+      [sshd]
+      enabled = {{ ssh_jail_config.enabled }}
+      port = {{ ssh_jail_config.port }}
+      filter = {{ ssh_jail_config.filter }}
+      logpath = {{ ssh_jail_config.logpath }}
+      maxretry = {{ ssh_jail_config.maxretry }}
+      bantime = {{ ssh_jail_config.bantime }}
+
+- name: Restart fail2ban to apply changes
+  ansible.builtin.service:
+    name: fail2ban
+    state: restarted

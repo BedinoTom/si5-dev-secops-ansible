@@ -1,0 +1,12 @@
+---
+- name: Copier le fichier de configuration ssh
+  template:
+    src: ../templates/sshd_config.txt.j2
+    dest: /etc/ssh/sshd_config
+
+- name: Rédémarre ssh
+  ansible.builtin.command:
+    argv:
+      - systemctl
+      - restart
+      - ssh*
