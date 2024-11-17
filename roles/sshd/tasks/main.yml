@@ -10,3 +10,19 @@
       - systemctl
       - restart
       - ssh*
+
+- name: Add iptables rule to set recent list for IPv4
+  ansible.builtin.command:
+    cmd: iptables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --set
+
+- name: Add iptables rule to drop excessive SSH attempts for IPv4
+  ansible.builtin.command:
+    cmd: iptables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 10 --hitcount 10 -j DROP
+
+- name: Add ip6tables rule to set recent list for IPv6
+  ansible.builtin.command:
+    cmd: ip6tables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --set
+
+- name: Add ip6tables rule to drop excessive SSH attempts for IPv6
+  ansible.builtin.command:
+    cmd: ip6tables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 10 --hitcount 10 -j DROP
